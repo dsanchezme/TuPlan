@@ -1,11 +1,16 @@
 <resources>
     <string name="app_name">TuPlan</string>
 
+    <string name="name">Nombre</string>
     <string name="email">Correo</string>
     <string name="password">Contraseña</string>
+    <string name="confirmPassword">Confirmar Contraseña</string>
     <string name="loginTitle">Login</string>
+    <string name="registerTitle">Register</string>
     <string name="loginButton">Ingresar</string>
+    <string name="registerButton">Registrarse</string>
     <string name="noAccountQuestion">¿No tienes cuenta?</string>
+    <string name="alreadyAccountQuestion">¿Ya tienes cuenta?</string>
     <string name="orText">o</string>
 
 

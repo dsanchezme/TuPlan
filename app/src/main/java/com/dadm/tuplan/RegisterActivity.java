@@ -7,19 +7,19 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class MainActivity extends AppCompatActivity {
+public class RegisterActivity extends AppCompatActivity {
 
-    TextView goToRegister;
+    TextView goToLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_register);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        goToRegister = findViewById(R.id.noAccountQuestion);
-        goToRegister.setOnClickListener(view -> {
-            startActivity(new Intent(MainActivity.this, RegisterActivity.class));
+        goToLogin = findViewById(R.id.alreadyAccountQuestion);
+        goToLogin.setOnClickListener(view -> {
+            startActivity(new Intent(RegisterActivity.this, MainActivity.class));
         });
     }
 }
