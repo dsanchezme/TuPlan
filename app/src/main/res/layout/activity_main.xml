@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -18,7 +17,7 @@
                 android:id="@+id/appTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="60dp"
+                android:layout_marginTop="20dp"
                 android:text="@string/app_name"
                 android:textSize="60sp"
                 android:textStyle="bold"
@@ -28,10 +27,10 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/registerTitle"
+                android:id="@+id/homeTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/loginTitle"
+                android:text="@string/homeTitle"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -39,105 +38,35 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/appTitle" />
 
-            <EditText
-                android:id="@+id/inputEmail"
+            <TextView
+                android:id="@+id/userName"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="30dp"
-                android:layout_marginTop="70dp"
-                android:layout_marginEnd="30dp"
-                android:ems="10"
-                android:hint="@string/email"
-                android:inputType="textEmailAddress"
-                android:drawableLeft="@drawable/ic_baseline_email_24"
-                android:drawablePadding="10dp"
+                android:gravity="center"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="50dp"
+                android:layout_marginEnd="20dp"
+                android:text="Hello world!"
+                android:textSize="40sp"
+                android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/registerTitle" />
-
-            <EditText
-                android:id="@+id/inputPassword"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:drawableLeft="@drawable/ic_baseline_key_24"
-                android:drawablePadding="10dp"
-                android:ems="10"
-                android:hint="@string/password"
-                android:inputType="textPassword"
-                app:layout_constraintEnd_toEndOf="@+id/inputEmail"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="@+id/inputEmail"
-                app:layout_constraintTop_toBottomOf="@+id/inputEmail" />
+                app:layout_constraintTop_toBottomOf="@+id/homeTitle" />
 
             <Button
-                android:id="@+id/registerButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="48dp"
-                android:text="@string/loginButton"
-                app:layout_constraintEnd_toEndOf="@+id/inputPassword"
-                app:layout_constraintStart_toStartOf="@+id/inputPassword"
-                app:layout_constraintTop_toBottomOf="@+id/inputPassword" />
-
-            <TextView
-                android:id="@+id/noAccountQuestion"
+                android:id="@+id/logoutButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/noAccountQuestion"
-                android:layout_marginTop="10dp"
-                app:layout_constraintEnd_toEndOf="@+id/registerButton"
-                app:layout_constraintStart_toStartOf="@+id/registerButton"
-                app:layout_constraintTop_toBottomOf="@+id/registerButton" />
-
-            <TextView
-                android:id="@+id/orText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/orText"
+                android:layout_marginTop="80dp"
+                android:text="@string/logoutButton"
                 android:textSize="20sp"
-                android:layout_marginTop="50dp"
+                android:paddingVertical="20dp"
+                android:paddingHorizontal="40dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/noAccountQuestion" />
-
-            <View
-                android:id="@+id/rightLine"
-                android:layout_width="0dp"
-                android:layout_height="2dp"
-                android:layout_marginStart="16dp"
-                android:background="@android:color/darker_gray"
-                app:layout_constraintBottom_toBottomOf="@+id/orText"
-                app:layout_constraintEnd_toEndOf="@+id/registerButton"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toEndOf="@+id/orText"
-                app:layout_constraintTop_toTopOf="@+id/orText" />
-
-            <View
-                android:id="@+id/leftLine"
-                android:layout_width="0dp"
-                android:layout_height="2dp"
-                android:layout_marginEnd="16dp"
-                android:background="@android:color/darker_gray"
-                app:layout_constraintBottom_toBottomOf="@+id/orText"
-                app:layout_constraintEnd_toStartOf="@+id/orText"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toStartOf="@+id/registerButton"
-                app:layout_constraintTop_toTopOf="@+id/orText" />
-
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                app:layout_constraintEnd_toEndOf="@+id/rightLine"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="@+id/leftLine"
-                app:layout_constraintTop_toBottomOf="@+id/orText"
-                app:srcCompat="@drawable/google_logo" />
+                app:layout_constraintTop_toBottomOf="@+id/userName" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,13 +5,24 @@
     <string name="email">Correo</string>
     <string name="password">Contraseña</string>
     <string name="confirmPassword">Confirmar Contraseña</string>
+
     <string name="loginTitle">Login</string>
     <string name="registerTitle">Register</string>
+    <string name="homeTitle">Home</string>
+
     <string name="loginButton">Ingresar</string>
     <string name="registerButton">Registrarse</string>
+    <string name="logoutButton">Salir</string>
+
     <string name="noAccountQuestion">¿No tienes cuenta?</string>
     <string name="alreadyAccountQuestion">¿Ya tienes cuenta?</string>
     <string name="orText">o</string>
 
+    <string name="nameError">Ingresa tu nombre</string>
+    <string name="emailError">Ingresa un email válido</string>
+    <string name="passwordError">Ingresa mínimo 6 caracteres</string>
+    <string name="inputConfirmPassword">Confirmación incorrecta</string>
+    <string name="registerError">Error realizando el registro</string>
+    <string name="loginError">Credenciales inválidas</string>
 
 </resources>

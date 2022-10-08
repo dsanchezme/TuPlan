@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "863653533311",
+    "project_id": "tuplan-app",
+    "storage_bucket": "tuplan-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:863653533311:android:3e033650f310729707914a",
+        "android_client_info": {
+          "package_name": "com.dadm.tuplan"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "863653533311-10s3tjrtiq2kirq78c3p604hee2b9eol.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAHPcxqjWaTYX8jMGczjAIpK81uK4bBJZ0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "863653533311-10s3tjrtiq2kirq78c3p604hee2b9eol.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
