@@ -1,5 +1,6 @@
 package com.dadm.tuplan;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -30,7 +31,10 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText inputName, inputEmail, inputPassword, inputConfirmPassword;
     private Button registerButton;
 
+    private ProgressDialog progressDialog;
+
     private UserDAO userDAO = new UserDAO();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,8 +53,8 @@ public class RegisterActivity extends AppCompatActivity {
         inputEmail = findViewById(R.id.inputEmail);
         inputPassword = findViewById(R.id.inputPassword);
         inputConfirmPassword = findViewById(R.id.inputConfirmPassword);
-
         registerButton = findViewById(R.id.loginButton);
+        progressDialog = new ProgressDialog(this);
 
         registerButton.setOnClickListener(view -> {
             handleRegistration();
@@ -91,12 +95,19 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
+        progressDialog.setMessage("Registrando usuario...");
+        progressDialog.setTitle("Register");
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
+
         mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, task -> {
             if (task.isSuccessful()){
                 User user = new User(name, email);
                 userDAO.addUser(mAuth.getCurrentUser().getUid(), user);
+                progressDialog.dismiss();
                 startActivity( new Intent(RegisterActivity.this, MainActivity.class));
             }else{
+                progressDialog.dismiss();
                 Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
             }
         });

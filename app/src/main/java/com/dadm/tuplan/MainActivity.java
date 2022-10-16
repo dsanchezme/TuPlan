@@ -59,12 +59,23 @@ public class MainActivity extends AppCompatActivity {
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
             return;
         }
+
+        System.out.println("###################");
+        System.out.println("###################");
+        System.out.println("ID: "+currentUser.getUid());
+        System.out.println("Phone number: "+currentUser.getPhoneNumber());
+        System.out.println("Email: "+currentUser.getEmail());
+        System.out.println("Name: "+currentUser.getDisplayName());
+        System.out.println("Photo URI: "+currentUser.getPhotoUrl());
+        System.out.println("###################");
+        System.out.println("###################");
+
         userReference = userDAO.getUsersReference().child(currentUser.getUid());
         userReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
-                userName = user != null ? user.getName() : null;
+                userName = user != null ? user.getName() : currentUser.getDisplayName();
                 userNameTextView.setText("¡Hola " + userName + "!");
             }
 
