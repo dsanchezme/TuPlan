@@ -17,6 +17,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.Serializable;
+import java.util.Map;
+
 public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
@@ -44,9 +47,6 @@ public class MainActivity extends AppCompatActivity {
             FirebaseAuth.getInstance().signOut();
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
         });
-
-
-
     }
 
     @Override
@@ -74,9 +74,13 @@ public class MainActivity extends AppCompatActivity {
         userReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                User user = dataSnapshot.getValue(User.class);
+                System.out.println(dataSnapshot.getValue());
+                User user = new User((Map<String, Object>) dataSnapshot.getValue()) ;
                 userName = user != null ? user.getName() : currentUser.getDisplayName();
                 userNameTextView.setText("¡Hola " + userName + "!");
+                Intent toHome = new Intent(MainActivity.this, HomeActivity.class);
+                toHome.putExtra("user", user);
+                startActivity(toHome);
             }
 
             @Override
