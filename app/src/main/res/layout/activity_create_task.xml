@@ -6,7 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-
     <TextView
         android:id="@+id/appTitle"
         android:layout_width="match_parent"
@@ -19,49 +18,104 @@
         android:textSize="60sp"
         app:layout_constraintTop_toTopOf="parent" />
 
-        <EditText
-            android:id="@+id/title_input"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            android:ems="10"
-            android:hint="Titulo"/>
-        <EditText
-            android:id="@+id/description_input"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:ems="10"
-            android:hint="Descripcion" />
-    <EditText
-        android:id="@+id/status_input"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:ems="10"
-        android:hint="Status" />
-    <EditText
-        android:id="@+id/start_date_input"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:ems="10"
-        android:hint="Fecha de Inicio" />
-    <EditText
-        android:id="@+id/priority_input"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:ems="10"
-        android:hint="Prioridad" />
-    <Button
-        android:id="@+id/buttonCreatePlan"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:text="Crear Plan">
+            android:layout_weight="6"
+            android:orientation="vertical"
+            android:layout_gravity="center">
+            <EditText
+                android:id="@+id/title_input"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="Titulo"/>
+            <EditText
+                android:id="@+id/description_input"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="Descripcion" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:text="Status"
+                    android:textSize="20dp"
+                    android:gravity="center"
+                    >
+                </TextView>
+                <Spinner
+                    android:id="@+id/status_input"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:ems="10"
+                    android:hint="Status" />
+            </LinearLayout>
 
-    </Button>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="3"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:text="Fecha"
+                    android:textSize="20dp"
+                    android:gravity="center"
+                    >
+                </TextView>
+                <DatePicker
+                    android:id="@+id/start_date_input"
+                    android:layout_width="0dp"
+                    android:layout_weight="3"
+                    android:layout_height="match_parent"
+                    android:datePickerMode="spinner"
+                    android:calendarViewShown="false"
+                    android:hint="Fecha de Inicio"
+                    android:layout_gravity="center"/>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:layout_height="match_parent"
+                    android:text="Prioridad"
+                    android:textSize="20dp"
+                    android:gravity="center"
+                    >
+                </TextView>
+                <Spinner
+                    android:id="@+id/priority_input"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:hint="Prioridad" />
+            </LinearLayout>
+            <Button
+                android:id="@+id/buttonCreatePlan"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="Crear Plan">
+            </Button>
+        </LinearLayout>
 
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
