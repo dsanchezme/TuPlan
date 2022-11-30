@@ -14,10 +14,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.io.Serializable;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
@@ -74,13 +72,21 @@ public class MainActivity extends AppCompatActivity {
         userReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                System.out.println(dataSnapshot.getValue());
-                User user = new User((Map<String, Object>) dataSnapshot.getValue()) ;
-                userName = user != null ? user.getName() : currentUser.getDisplayName();
-                userNameTextView.setText("¡Hola " + userName + "!");
-                Intent toHome = new Intent(MainActivity.this, HomeActivity.class);
+                Intent toHome = new Intent(MainActivity.this, MyTasksActivity.class);
+                User user;
+                try {
+                    System.out.println(dataSnapshot.getValue());
+                    user = new User((Map<String, Object>) dataSnapshot.getValue()) ;
+                    userName = user != null ? user.getName() : currentUser.getDisplayName();
+
+                }catch (Exception e){
+                    userName = currentUser.getDisplayName();
+                    user = new User(userName, currentUser.getEmail());
+                }
                 toHome.putExtra("user", user);
+                userNameTextView.setText("¡Hola " + userName + "!");
                 startActivity(toHome);
+
             }
 
             @Override

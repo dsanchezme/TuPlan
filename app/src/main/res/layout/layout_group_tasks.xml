@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <TextView
+        android:id="@+id/group"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textStyle="bold"
+        android:text="Group name"
+        android:textSize="25sp"
+        android:textColor="@color/principal"/>
+
+    <TableLayout
+        android:id="@+id/tableLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp">
+
+        <TableRow
+            android:background="@drawable/border">
+            <TextView android:text="Tarea"
+                android:layout_weight="1"
+                android:textStyle="bold"
+                android:background="@drawable/border"
+                android:height="30dp"
+                android:gravity="center"/>
+            <TextView android:text="Responsable"
+                android:textAlignment="center"
+                android:layout_weight="1"
+                android:background="@drawable/border"
+                android:textStyle="bold"
+                android:height="30dp"
+                android:gravity="center"/>
+            <TextView android:text="Fecha"
+                android:textAlignment="center"
+                android:layout_weight="1"
+                android:background="@drawable/border"
+                android:textStyle="bold"
+                android:height="30dp"
+                android:gravity="center"/>
+            <TextView android:text="Status"
+                android:textAlignment="center"
+                android:layout_weight="1"
+                android:background="@drawable/border"
+                android:textStyle="bold"
+                android:height="30dp"
+                android:gravity="center"/>
+
+        </TableRow>
+
+    </TableLayout>
+
+</LinearLayout>
