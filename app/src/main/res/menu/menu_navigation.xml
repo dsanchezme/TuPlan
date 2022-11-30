@@ -13,4 +13,8 @@
         android:id="@+id/CreateTask"
         android:icon="@android:drawable/btn_plus"
         android:title="Crear Plan" />
+    <item
+        android:id="@+id/Settings"
+        android:icon="@drawable/ic_settings"
+        android:title="Ajustes" />
 </menu>

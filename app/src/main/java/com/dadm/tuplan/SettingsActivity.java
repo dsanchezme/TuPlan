@@ -16,11 +16,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.dadm.tuplan.dao.GroupDAO;
 import com.dadm.tuplan.dao.PlanDAO;
+import com.dadm.tuplan.dao.UserDAO;
 import com.dadm.tuplan.models.Group;
 import com.dadm.tuplan.models.Plan;
 import com.dadm.tuplan.models.User;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -33,16 +35,17 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
-public class CreateTaskActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class SettingsActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     private TextView inputTitle;
     private TextView inputDescription;
     private DatePicker inputStartDate;
     private Spinner inputPriority;
     private Spinner inputStatus;
     private Spinner inputSharedWith;
-    private Button buttonCreatePlan;
+    private Button buttonCerrarSesion;
     private Snackbar mySnackbar;
     private PlanDAO planDAO;
+    private UserDAO userDAO;
     private User currentUser;
 
     private String[] arrayStatus = {"Pendiente", "Completada"};
@@ -62,21 +65,19 @@ public class CreateTaskActivity extends AppCompatActivity implements AdapterView
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_task);
+        setContentView(R.layout.settings_activity);
         planDAO = new PlanDAO();
         Bundle extras = getIntent().getExtras();
         currentUser = (User) extras.get("user");
         initNavBar();
         initViews();
-
-
     }
     private void initNavBar() {
         // Initialize and assign variable
         BottomNavigationView bottomNavigationView=findViewById(R.id.bottom_navigation);
 
         // Set Home selected
-        bottomNavigationView.setSelectedItemId(R.id.CreateTask);
+        bottomNavigationView.setSelectedItemId(R.id.Settings);
 
         // Perform item selected listener
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -86,21 +87,21 @@ public class CreateTaskActivity extends AppCompatActivity implements AdapterView
                 switch(item.getItemId())
                 {
                     case R.id.MyTasks:
-                        Intent toMyTasks = new Intent(CreateTaskActivity.this, MyTasksActivity.class);
+                        Intent toMyTasks = new Intent(SettingsActivity.this, MyTasksActivity.class);
                         toMyTasks.putExtra("user",(User) getIntent().getExtras().get("user"));
                         startActivity(toMyTasks);
                         return true;
                     case R.id.Home:
-                        Intent toHome = new Intent(CreateTaskActivity.this, HomeTasksActivity.class);
+                        Intent toHome = new Intent(SettingsActivity.this, HomeTasksActivity.class);
                         toHome.putExtra("user",(User) getIntent().getExtras().get("user"));
                         startActivity(toHome);
                         return true;
                     case R.id.CreateTask:
-                        return true;
-                    case R.id.Settings:
-                        Intent toSettings = new Intent(CreateTaskActivity.this, SettingsActivity.class);
+                        Intent toSettings = new Intent(SettingsActivity.this, CreateTaskActivity.class);
                         toSettings.putExtra("user", currentUser);
                         startActivity(toSettings);
+                        return true;
+                    case R.id.Settings:
                         return true;
                 }
                 return false;
@@ -128,9 +129,9 @@ public class CreateTaskActivity extends AppCompatActivity implements AdapterView
         inputTitle =(TextView) findViewById(R.id.title_input);
         inputDescription =(TextView) findViewById(R.id.description_input);
         inputStartDate =(DatePicker) findViewById(R.id.start_date_input);
-        buttonCreatePlan = (Button) findViewById(R.id.buttonCreatePlan);
-        buttonCreatePlan.setOnClickListener(view -> {
-            handleClickCreation();
+        buttonCerrarSesion = (Button) findViewById(R.id.buttonCerrarSesion);
+        buttonCerrarSesion.setOnClickListener(view -> {
+            handleCerrarSesion();
         });
 
         groupReference = groupDAO.getGroupsReference();
@@ -173,32 +174,10 @@ public class CreateTaskActivity extends AppCompatActivity implements AdapterView
 
 
     }
-    private void handleClickCreation(){
-        int year = inputStartDate.getYear();
-        int month = inputStartDate.getMonth();
-        int day = inputStartDate.getDayOfMonth();
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(year, month, day);
-
-        SimpleDateFormat format = new SimpleDateFormat("MM-dd-yyyy");
-        String startDate = format.format(calendar.getTime());
-
-
-
-        String title =  inputTitle.getText().toString();
-        String desc = inputDescription.getText().toString();
-        String status = statusSelected;
-        String priority = prioritySelected;
-        String sharedWith = sharedWithSelected;
-        Plan newPlan = new Plan(title,desc,status,startDate,currentUser,priority, sharedWith);
-        long id = planDAO.getCountChildren();
-        planDAO.addPlan(String.valueOf(id+1),newPlan);
-        mySnackbar = Snackbar.make(findViewById(R.id.LayoutCreatePlan), "Creación plan exitosa", Snackbar.LENGTH_SHORT);
-        mySnackbar.show();
-        Intent toHome = new Intent(CreateTaskActivity.this, MyTasksActivity.class);
-        toHome.putExtra("user",(User) getIntent().getExtras().get("user"));
-        startActivity(toHome);
+    private void handleCerrarSesion(){
+        FirebaseAuth.getInstance().signOut();
+        Intent toMain = new Intent(SettingsActivity.this, MainActivity.class);
+        startActivity(toMain);
     }
 
     @Override
@@ -206,7 +185,7 @@ public class CreateTaskActivity extends AppCompatActivity implements AdapterView
         Spinner spinner = (Spinner) adapterView;
         if(spinner.getId() == R.id.status_input)
         {
-           statusSelected = spinner.getSelectedItem().toString();
+            statusSelected = spinner.getSelectedItem().toString();
         }
         else if(spinner.getId() == R.id.priority_input)
         {
@@ -223,3 +202,4 @@ public class CreateTaskActivity extends AppCompatActivity implements AdapterView
 
     }
 }
+

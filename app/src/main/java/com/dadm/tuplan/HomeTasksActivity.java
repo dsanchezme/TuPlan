@@ -124,8 +124,13 @@ public class HomeTasksActivity extends AppCompatActivity
                         startActivity(toMyTasks);
                         return true;
                     case R.id.Home:
-
                         return true;
+
+                    case R.id.Settings:
+                    Intent toSettings = new Intent(HomeTasksActivity.this, SettingsActivity.class);
+                    toSettings.putExtra("user", currentUser);
+                    startActivity(toSettings);
+                    return true;
                 }
                 return false;
             }

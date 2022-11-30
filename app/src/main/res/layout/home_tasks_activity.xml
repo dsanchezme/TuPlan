@@ -29,7 +29,8 @@
         android:orientation="horizontal"
         android:layout_weight="0.5"
         app:layout_constraintTop_toTopOf="parent"
-        android:gravity="center">
+        android:gravity="center"
+        >
 
         <TextView
             android:layout_width="wrap_content"
@@ -37,7 +38,8 @@
             android:textStyle="bold"
             android:text="@string/app_name"
             android:gravity="center"
-            android:textSize="40sp"/>
+            android:textSize="40sp"
+            android:textColor="@color/principal"/>
         <ImageView android:id="@+id/addGroup"
             android:layout_marginLeft="20dp"
             android:layout_width="30dp"
@@ -84,8 +86,10 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_alignParentBottom="true"
-        app:itemBackground="@color/ap_gray"
+        app:itemBackground="@color/principal"
         app:itemIconTint="@drawable/selector"
         app:itemTextColor="@drawable/selector"
-        app:menu="@menu/menu_navigation" />
+        app:menu="@menu/menu_navigation"
+        android:background="@color/principal"
+        />
 </LinearLayout>

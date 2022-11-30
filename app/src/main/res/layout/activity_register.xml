@@ -25,7 +25,8 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:textColor="@color/principal"/>
 
             <TextView
                 android:id="@+id/registerTitle"
@@ -109,7 +110,9 @@
                 android:text="@string/registerButton"
                 app:layout_constraintEnd_toEndOf="@+id/inputConfirmPassword"
                 app:layout_constraintStart_toStartOf="@+id/inputConfirmPassword"
-                app:layout_constraintTop_toBottomOf="@+id/inputConfirmPassword" />
+                app:layout_constraintTop_toBottomOf="@+id/inputConfirmPassword"
+                android:textColor="@color/white"
+                android:background="@color/principal"/>
 
             <TextView
                 android:id="@+id/alreadyAccountQuestion"
