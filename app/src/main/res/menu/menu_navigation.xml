@@ -11,7 +11,7 @@
         android:icon="@drawable/ic_home"/>
     <item
         android:id="@+id/CreateTask"
-        android:icon="@android:drawable/btn_plus"
+        android:icon="@drawable/ic_new_plan"
         android:title="Crear Plan" />
     <item
         android:id="@+id/Settings"
