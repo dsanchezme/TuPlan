@@ -105,7 +105,7 @@ public class RegisterActivity extends AppCompatActivity {
                 User user = new User(name, email);
                 userDAO.addUser(mAuth.getCurrentUser().getUid(), user);
                 progressDialog.dismiss();
-                startActivity( new Intent(RegisterActivity.this, MainActivity.class));
+                startActivity( new Intent(RegisterActivity.this, LoginActivity.class));
             }else{
                 progressDialog.dismiss();
                 Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();

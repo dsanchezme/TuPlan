@@ -13,30 +13,50 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TuPlan"
         tools:targetApi="31">
-        <activity
-            android:name=".MainActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+<!--        <activity-->
+<!--            android:name=".HomeActivity"-->
+<!--            android:exported="true">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
+<!--        </activity>-->
         <activity
             android:name=".RegisterActivity"
             android:exported="false" />
         <activity
             android:name=".LoginActivity"
-            android:exported="false" />
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".GoogleSignInActivity"
             android:exported="false" />
         <activity
-            android:name=".HomeActivity"
-            android:exported="false" />
+            android:name=".MyTasksActivity"
+            android:launchMode="singleTask" />
         <activity
-            android:name=".CreateTaskActivity"
-            android:exported="false" />
+            android:name=".CreateTaskActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MyTasksActivity">
+            </meta-data>
+        </activity>
+        <activity
+            android:name=".CreateGroupActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY"
+                android:value=".HomeTasksActivity">
+            </meta-data>
+        </activity>
+        <activity
+            android:name=".HomeTasksActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MyTasksActivity">
+            </meta-data>
+        </activity>
     </application>
 
 </manifest>

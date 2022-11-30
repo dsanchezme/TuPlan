@@ -3,8 +3,6 @@ package com.dadm.tuplan;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.dadm.tuplan.models.User;
 import com.dadm.tuplan.utils.AccountUtil;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -71,10 +70,11 @@ public class LoginActivity extends AppCompatActivity {
 
     protected void goToHomePage(FirebaseUser currentUser){
         if (currentUser != null){
-            System.out.println("###################");
-            System.out.println("Going to home page");
-            System.out.println("###################");
-            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            Intent toHome = new Intent(LoginActivity.this, MyTasksActivity.class);
+            User user = new User(currentUser.getDisplayName(), currentUser.getEmail());
+
+            toHome.putExtra("user", user);
+            startActivity(toHome);
         }
     }
 
@@ -99,7 +99,7 @@ public class LoginActivity extends AppCompatActivity {
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, task -> {
             if (task.isSuccessful()){
                 progressDialog.dismiss();
-                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                startActivity(new Intent(LoginActivity.this, MyTasksActivity.class));
             }else{
                 progressDialog.dismiss();
                 Toast.makeText(LoginActivity.this, task.getException().getMessage() , Toast.LENGTH_SHORT).show();

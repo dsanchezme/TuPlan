@@ -23,7 +23,9 @@
             android:layout_height="0dp"
             android:layout_weight="6"
             android:orientation="vertical"
-            android:layout_gravity="center">
+            android:layout_gravity="center"
+            android:paddingVertical="20dp"
+            android:paddingHorizontal="40dp">
             <EditText
                 android:id="@+id/title_input"
                 android:layout_width="match_parent"
@@ -69,7 +71,7 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="2"
+                    android:layout_weight="0.3"
                     android:text="Fecha"
                     android:textSize="20dp"
                     android:gravity="center"
@@ -78,7 +80,7 @@
                 <DatePicker
                     android:id="@+id/start_date_input"
                     android:layout_width="0dp"
-                    android:layout_weight="3"
+                    android:layout_weight="0.7"
                     android:layout_height="match_parent"
                     android:datePickerMode="spinner"
                     android:calendarViewShown="false"
@@ -90,7 +92,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_weight="1.2"
                 android:orientation="horizontal">
                 <TextView
                     android:layout_width="0dp"
@@ -107,6 +109,27 @@
                     android:layout_height="match_parent"
                     android:layout_weight="3"
                     android:hint="Prioridad" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1.2"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="2.2"
+                    android:layout_height="match_parent"
+                    android:text="Compartir con"
+                    android:textSize="20dp"
+                    android:gravity="center"
+                    >
+                </TextView>
+                <Spinner
+                    android:id="@+id/shared_with_input"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2.8"
+                    android:hint="Compartir" />
             </LinearLayout>
             <Button
                 android:id="@+id/buttonCreatePlan"

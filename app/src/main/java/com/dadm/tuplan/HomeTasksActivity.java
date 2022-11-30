@@ -1,10 +1,13 @@
 package com.dadm.tuplan;
 
 import android.content.Intent;
-import android.graphics.*;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -12,16 +15,16 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.androidplot.pie.PieChart;
-import com.androidplot.pie.Segment;
-import com.androidplot.pie.SegmentFormatter;
-import com.androidplot.util.*;
+import com.androidplot.util.PixelUtils;
 import com.androidplot.xy.BarFormatter;
 import com.androidplot.xy.BarRenderer;
 import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.xy.XYPlot;
 import com.androidplot.xy.XYSeries;
+import com.dadm.tuplan.dao.GroupDAO;
 import com.dadm.tuplan.dao.PlanDAO;
+import com.dadm.tuplan.helpers.SharedTasksListAdapter;
+import com.dadm.tuplan.models.Group;
 import com.dadm.tuplan.models.Plan;
 import com.dadm.tuplan.models.User;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -31,27 +34,33 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
-/**
- * The simplest possible example of using AndroidPlot to plot some data.
- */
-public class HomeActivity extends AppCompatActivity
+public class HomeTasksActivity extends AppCompatActivity
 {
 
-    private ArrayList<Plan> planes = new ArrayList<>();
-    private ArrayList<Plan> planesCompletados = new ArrayList<>();
+    private Map<String, List<Plan>> tasksByGroup = new HashMap<>();
+    private List<Plan> planesCompletados = new ArrayList<>();
+    private List<String> myGroups = new ArrayList<>();
     private int planesCompletadosPrioridadBaja = 0;
     private int planesCompletadosPrioridadMedia = 0;
     private int planesCompletadosPrioridadAlta = 0;
-    private ArrayList<Plan> planesPendientes = new ArrayList<>();
+    private List<Plan> planesPendientes = new ArrayList<>();
     private int planesPendientesPrioridadBaja = 0;
     private int planesPendientesPrioridadMedia = 0;
     private int planesPendientesPrioridadAlta = 0;
     private PlanDAO planDAO = new PlanDAO();
+    private GroupDAO groupDAO = new GroupDAO();
     User currentUser;
     DatabaseReference planReference;
+    DatabaseReference groupReference;
+    private ImageView newGroupButton;
+    private ListView tasksView;
+
 
     private XYPlot plot;
 
@@ -61,27 +70,17 @@ public class HomeActivity extends AppCompatActivity
     BarFormatter pendientesFormatter;
     private XYSeries pendientes  = new SimpleXYSeries(SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Pendientes",0,0,0);
 
-    private PieChart pie;
-
-    SegmentFormatter sf1;
-    private Segment s1;
-    SegmentFormatter sf2;
-    private Segment s2;
     private int numeroTareasCompletadas = 0;
     private int numeroTareasPendientes = 0;
-
-    private TableLayout table;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.home_activity);
+        setContentView(R.layout.home_tasks_activity);
         completadasFormatter = new BarFormatter(Color.parseColor("#17008b"), Color.BLACK);
         pendientesFormatter = new BarFormatter(Color.parseColor("#e47b30"), Color.BLACK);
-        initPieChart();
         initBarChart();
-        initTable();
         initNavBar();
         Bundle extras = getIntent().getExtras();
         if (extras != null){
@@ -105,10 +104,8 @@ public class HomeActivity extends AppCompatActivity
     private void initNavBar() {
         // Initialize and assign variable
         BottomNavigationView bottomNavigationView=findViewById(R.id.bottom_navigation);
-
         // Set Home selected
         bottomNavigationView.setSelectedItemId(R.id.Home);
-
         // Perform item selected listener
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -117,16 +114,18 @@ public class HomeActivity extends AppCompatActivity
                 switch(item.getItemId())
                 {
                     case R.id.CreateTask:
-                        Intent toCreateTask = new Intent(HomeActivity.this, CreateTaskActivity.class);
+                        Intent toCreateTask = new Intent(HomeTasksActivity.this, CreateTaskActivity.class);
                         toCreateTask.putExtra("user",(User) getIntent().getExtras().get("user"));
                         startActivity(toCreateTask);
                         return true;
-                    case R.id.Home:
+                    case R.id.MyTasks:
+                        Intent toMyTasks = new Intent(HomeTasksActivity.this, MyTasksActivity.class);
+                        toMyTasks.putExtra("user",(User) getIntent().getExtras().get("user"));
+                        startActivity(toMyTasks);
                         return true;
-                    /*case R.id.about:
-                        startActivity(new Intent(getApplicationContext(),About.class));
-                        overridePendingTransition(0,0);
-                        return true;*/
+                    case R.id.Home:
+
+                        return true;
                 }
                 return false;
             }
@@ -134,10 +133,41 @@ public class HomeActivity extends AppCompatActivity
     }
     private void initData(Bundle extras) {
         currentUser = (User) extras.get("user");
+
+        tasksView = findViewById(R.id.groups_list);
+
+        newGroupButton = findViewById(R.id.addGroup);
+        newGroupButton.setOnClickListener(view -> {
+            Intent toCreateGroup = new Intent(HomeTasksActivity.this, CreateGroupActivity.class);
+            toCreateGroup.putExtra("user",(User) getIntent().getExtras().get("user"));
+            startActivity(toCreateGroup);
+        });
+
+        groupReference = groupDAO.getGroupsReference();
+        groupReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                myGroups.clear();
+                for (DataSnapshot groupsDataSnapshot: snapshot.getChildren()) {
+                    if (groupsDataSnapshot.getValue() == null)
+                        continue;
+                    Group group = new Group((Map<String, Object>) groupsDataSnapshot.getValue());
+                    if (group.getMembers().contains(currentUser.getEmail())){
+                        myGroups.add(group.getName());
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
         planReference = planDAO.getPlansReference();
         planReference.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot   dataSnapshot) {
+            public void onDataChange(DataSnapshot dataSnapshot) {
                 planesCompletados.clear();
                 planesPendientes.clear();
                 planesCompletadosPrioridadBaja = 0;
@@ -150,6 +180,24 @@ public class HomeActivity extends AppCompatActivity
                 for (DataSnapshot planesDataSnapshot: dataSnapshot.getChildren()) {
                     if (planesDataSnapshot.getValue() != null){
                         Plan plan = new Plan((Map<String, Object>) planesDataSnapshot.getValue());
+                        System.out.println("MY GROUPS: "+ myGroups);
+                        if (!myGroups.contains(plan.getSharedWith()))
+                            continue;
+                        System.out.println("MY Plan: "+ plan);
+                        if (!tasksByGroup.keySet().contains(plan.getSharedWith())){
+                            tasksByGroup.put(plan.getSharedWith(), new ArrayList<>(Arrays.asList(plan)));
+                        }else{
+                            System.out.println(tasksByGroup.get(plan.getSharedWith()));
+                            List<Plan> auxGroupPlans = new ArrayList<>(Arrays.asList(plan));
+
+
+                            if (!listContainsPlan(tasksByGroup.get(plan.getSharedWith()),plan)) {
+                                auxGroupPlans.addAll(tasksByGroup.get(plan.getSharedWith()));
+                                tasksByGroup.put(plan.getSharedWith(), auxGroupPlans);
+                            }
+                        }
+
+
                         if (plan.getStatus().equals("Completada")){
                             planesCompletados.add(plan);
                             if (plan.getPriority().equals("Baja")){
@@ -179,10 +227,11 @@ public class HomeActivity extends AppCompatActivity
                 System.out.println("The read failed: " + databaseError.getCode());
             }
         });
+
+        SharedTasksListAdapter tasksAdapter = new SharedTasksListAdapter(this,R.layout.layout_group_tasks,myGroups, tasksByGroup);
+        tasksView.setAdapter(tasksAdapter);
     }
-    private void initTable() {
-        table = (TableLayout) findViewById(R.id.tableLayout);
-    }
+
     private void initBarChart() {
         // initialize our XYPlot reference:
         plot = (XYPlot) findViewById(R.id.barras);
@@ -205,112 +254,12 @@ public class HomeActivity extends AppCompatActivity
         plot.addSeries(pendientesFormatter,pendientes );
 
     }
-    private void initPieChart() {
-        pie = (PieChart) findViewById(R.id.torta);
 
-        final float padding = PixelUtils.dpToPix(30);
-        pie.getPie().setPadding(padding, padding, padding, padding);
-
-        s1 = new Segment("Completadas", numeroTareasCompletadas);
-        s2 = new Segment("Pendientes", numeroTareasPendientes);
-
-        sf1 = new SegmentFormatter(this, R.xml.pie_segment_formatter1);
-        sf1.getLabelPaint().setShadowLayer(3, 0, 0, Color.BLACK);
-
-        sf2 = new SegmentFormatter(this, R.xml.pie_segment_formatter2);
-        sf2.getLabelPaint().setShadowLayer(3, 0, 0, Color.BLACK);
-
-        pie.addSegment(s1, sf1);
-        pie.addSegment(s2, sf2);
-
-        pie.getBackgroundPaint().setColor(Color.TRANSPARENT);
-        pie.getTitle().getLabelPaint().setColor(Color.BLACK);
-    }
     private void updateCharts(){
 
-        updateTable();
-        updatePie();
         updateBars();
     }
-    private void updateTable() {
-        table.removeAllViews();
-        TableRow.LayoutParams paramsHeader = new TableRow.LayoutParams();
-        paramsHeader.weight = 1;
-
-        TableRow rowHeader = new TableRow(this);
-        TextView header1 = new TextView(this);
-        header1.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        header1.setTypeface(header1.getTypeface(),Typeface.BOLD);
-        header1.setBackground(getResources().getDrawable(R.drawable.border));
-        header1.setLayoutParams(paramsHeader);
-        header1.setText("Tarea");
-        TextView header2 = new TextView(this);
-        header2.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        header2.setTypeface(header2.getTypeface(),Typeface.BOLD);
-        header2.setBackground(getResources().getDrawable(R.drawable.border));
-        header2.setLayoutParams(paramsHeader);
-        header2.setText("Responsable");
-        TextView header3 = new TextView(this);
-        header3.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        header3.setTypeface(header3.getTypeface(),Typeface.BOLD);
-        header3.setBackground(getResources().getDrawable(R.drawable.border));
-        header3.setLayoutParams(paramsHeader);
-        header3.setText("Fecha Inicio");
-        TextView header4 = new TextView(this);
-        header4.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        header4.setTypeface(header4.getTypeface(),Typeface.BOLD);
-        header4.setBackground(getResources().getDrawable(R.drawable.border));
-        header4.setLayoutParams(paramsHeader);
-        header4.setText("Prioridad");
-
-        rowHeader.addView(header1);
-        rowHeader.addView(header2);
-        rowHeader.addView(header3);
-        rowHeader.addView(header4);
-
-        table.addView(rowHeader);
-
-        for (Plan plan:
-                planesPendientes) {
-            TableRow.LayoutParams params = new TableRow.LayoutParams();
-            params.weight = 1;
-
-            TableRow row = new TableRow(this);
-            TextView column1 = new TextView(this);
-            column1.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-            column1.setBackground(getResources().getDrawable(R.drawable.border));
-            column1.setLayoutParams(params);
-            column1.setText(plan.getTitle());
-
-            TextView column2 = new TextView(this);
-            column2.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-            column2.setBackground(getResources().getDrawable(R.drawable.border));
-            column2.setLayoutParams(params);
-            column2.setText(plan.getOwner().getName());
-
-            TextView column3 = new TextView(this);
-            column3.setText(plan.getStartDate());
-            column3.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-            column3.setBackground(getResources().getDrawable(R.drawable.border));
-            column3.setLayoutParams(params);
-            column3.setText(plan.getStartDate());
-
-            TextView column4 = new TextView(this);
-            column4.setText(plan.getStatus());
-            column4.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-            column4.setBackground(getResources().getDrawable(R.drawable.border));
-            column4.setLayoutParams(params);
-            column4.setText(plan.getPriority());
-
-            row.addView(column1);
-            row.addView(column2);
-            row.addView(column3);
-            row.addView(column4);
-            table.addView(row);
-        }
-
-    }
-    private void updateBars() {
+       private void updateBars() {
         /*
         *System.out.println("planesCompletadosPrioridadBaja" + String.valueOf(planesCompletadosPrioridadBaja));
         System.out.println("planesCompletadosPrioridadMedia" + String.valueOf(planesCompletadosPrioridadMedia));
@@ -332,17 +281,14 @@ public class HomeActivity extends AppCompatActivity
         plot.addSeries(pendientes,pendientesFormatter);
         plot.redraw();
     }
-    private void updatePie() {
-        pie.removeSegment(s1);
-        pie.removeSegment(s2);
-        numeroTareasCompletadas = planesCompletados.size();
-        numeroTareasPendientes = planesPendientes.size();
-        s1 = new Segment("Completadas", numeroTareasCompletadas);
-        s2 = new Segment("Pendientes", numeroTareasPendientes);
-        pie.addSegment(s1,sf1);
-        pie.addSegment(s2,sf2);
-        pie.redraw();
-    }
 
+    private boolean listContainsPlan(List<Plan> list, Plan plan){
+        for (Plan item : list){
+            if (item.getTitle().equals(plan.getTitle())){
+                return true;
+            }
+        }
+        return false;
+    }
 
 }
