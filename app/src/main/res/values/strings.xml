@@ -25,4 +25,18 @@
     <string name="registerError">Error realizando el registro</string>
     <string name="loginError">Credenciales inválidas</string>
 
+    <string name="clas_prompt">Seleccione status</string>
+    <string-array name="clas_status">
+        <item>Seleccione status</item>
+        <item>Completado</item>
+        <item>Pendiente</item>
+    </string-array>
+    <string name="clas_prior">Seleccione prioridad</string>
+    <string-array name="clas_priority">
+        <item>Seleccione la prioridad</item>
+        <item>Baja</item>
+        <item>Media</item>
+        <item>Alta</item>
+    </string-array>
+
 </resources>
