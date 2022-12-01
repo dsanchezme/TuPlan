@@ -44,6 +44,7 @@ public class HomeTasksActivity extends AppCompatActivity
 {
 
     private Map<String, List<Plan>> tasksByGroup = new HashMap<>();
+    private Map<String, List<String>> tasksID = new HashMap<>();
     private List<Plan> planesCompletados = new ArrayList<>();
     private List<String> myGroups = new ArrayList<>();
     private int planesCompletadosPrioridadBaja = 0;
@@ -116,6 +117,7 @@ public class HomeTasksActivity extends AppCompatActivity
                     case R.id.CreateTask:
                         Intent toCreateTask = new Intent(HomeTasksActivity.this, CreateTaskActivity.class);
                         toCreateTask.putExtra("user",(User) getIntent().getExtras().get("user"));
+                        toCreateTask.putExtra("update", false);
                         startActivity(toCreateTask);
                         return true;
                     case R.id.MyTasks:
@@ -191,14 +193,18 @@ public class HomeTasksActivity extends AppCompatActivity
                         System.out.println("MY Plan: "+ plan);
                         if (!tasksByGroup.keySet().contains(plan.getSharedWith())){
                             tasksByGroup.put(plan.getSharedWith(), new ArrayList<>(Arrays.asList(plan)));
+                            tasksID.put(plan.getSharedWith(), new ArrayList<>(Arrays.asList(planesDataSnapshot.getKey())));
                         }else{
                             System.out.println(tasksByGroup.get(plan.getSharedWith()));
                             List<Plan> auxGroupPlans = new ArrayList<>(Arrays.asList(plan));
+                            List<String> auxTasksID = new ArrayList<>(Arrays.asList(planesDataSnapshot.getKey()));
 
 
                             if (!listContainsPlan(tasksByGroup.get(plan.getSharedWith()),plan)) {
                                 auxGroupPlans.addAll(tasksByGroup.get(plan.getSharedWith()));
+                                auxTasksID.addAll(tasksID.get(plan.getSharedWith()));
                                 tasksByGroup.put(plan.getSharedWith(), auxGroupPlans);
+                                tasksID.put(plan.getSharedWith(), auxTasksID);
                             }
                         }
 
@@ -233,7 +239,7 @@ public class HomeTasksActivity extends AppCompatActivity
             }
         });
 
-        SharedTasksListAdapter tasksAdapter = new SharedTasksListAdapter(this,R.layout.layout_group_tasks,myGroups, tasksByGroup);
+        SharedTasksListAdapter tasksAdapter = new SharedTasksListAdapter(this,R.layout.layout_group_tasks,myGroups, tasksByGroup, tasksID);
         tasksView.setAdapter(tasksAdapter);
     }
 

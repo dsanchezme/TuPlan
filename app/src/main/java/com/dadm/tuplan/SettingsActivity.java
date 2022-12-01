@@ -78,6 +78,7 @@ public class SettingsActivity extends AppCompatActivity  {
                     case R.id.CreateTask:
                         Intent toSettings = new Intent(SettingsActivity.this, CreateTaskActivity.class);
                         toSettings.putExtra("user", currentUser);
+                        toSettings.putExtra("update", false);
                         startActivity(toSettings);
                         return true;
                     case R.id.Settings:

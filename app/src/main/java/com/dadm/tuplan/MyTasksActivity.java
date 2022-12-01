@@ -3,6 +3,7 @@ package com.dadm.tuplan;
 import android.content.Intent;
 import android.graphics.*;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TableLayout;
@@ -36,6 +37,7 @@ public class MyTasksActivity extends AppCompatActivity
 {
 
     private ArrayList<Plan> planes = new ArrayList<>();
+    private ArrayList<String> planesID = new ArrayList<>();
     private ArrayList<Plan> planesCompletados = new ArrayList<>();
     private int planesCompletadosPrioridadBaja = 0;
     private int planesCompletadosPrioridadMedia = 0;
@@ -115,6 +117,7 @@ public class MyTasksActivity extends AppCompatActivity
                     case R.id.CreateTask:
                         Intent toCreateTask = new Intent(MyTasksActivity.this, CreateTaskActivity.class);
                         toCreateTask.putExtra("user", currentUser);
+                        toCreateTask.putExtra("update", false);
                         startActivity(toCreateTask);
                         return true;
                     case R.id.MyTasks:
@@ -194,6 +197,7 @@ public class MyTasksActivity extends AppCompatActivity
                         }
                     }else if(plan.getStatus().equals("Pendiente")){
                         planesPendientes.add(plan);
+                        planesID.add(planesDataSnapshot.getKey());
                         if (plan.getPriority().equals("Baja")){
                             planesPendientesPrioridadBaja += 1;
                         }else if (plan.getPriority().equals("Media")){
@@ -247,6 +251,7 @@ public class MyTasksActivity extends AppCompatActivity
         table.removeAllViews();
         TableRow.LayoutParams paramsHeader = new TableRow.LayoutParams();
         paramsHeader.weight = 1;
+        paramsHeader.height = 80;
 
         TableRow rowHeader = new TableRow(this);
         TextView header1 = new TextView(this);
@@ -255,48 +260,56 @@ public class MyTasksActivity extends AppCompatActivity
         header1.setBackground(getResources().getDrawable(R.drawable.border));
         header1.setLayoutParams(paramsHeader);
         header1.setText("Tarea");
-        TextView header2 = new TextView(this);
-        header2.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        header2.setTypeface(header2.getTypeface(),Typeface.BOLD);
-        header2.setBackground(getResources().getDrawable(R.drawable.border));
-        header2.setLayoutParams(paramsHeader);
-        header2.setText("Responsable");
+        header1.setTextSize(18);
+//        TextView header2 = new TextView(this);
+//        header2.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+//        header2.setTypeface(header2.getTypeface(),Typeface.BOLD);
+//        header2.setBackground(getResources().getDrawable(R.drawable.border));
+//        header2.setLayoutParams(paramsHeader);
+//        header2.setText("Responsable");
         TextView header3 = new TextView(this);
         header3.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         header3.setTypeface(header3.getTypeface(),Typeface.BOLD);
         header3.setBackground(getResources().getDrawable(R.drawable.border));
         header3.setLayoutParams(paramsHeader);
         header3.setText("Fecha Inicio");
+        header3.setTextSize(18);
+
         TextView header4 = new TextView(this);
         header4.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         header4.setTypeface(header4.getTypeface(),Typeface.BOLD);
         header4.setBackground(getResources().getDrawable(R.drawable.border));
         header4.setLayoutParams(paramsHeader);
         header4.setText("Prioridad");
+        header4.setTextSize(18);
 
         rowHeader.addView(header1);
-        rowHeader.addView(header2);
+//        rowHeader.addView(header2);
         rowHeader.addView(header3);
         rowHeader.addView(header4);
 
         table.addView(rowHeader);
 
+        int index = 0;
         for (Plan plan : planesPendientes) {
             TableRow.LayoutParams params = new TableRow.LayoutParams();
             params.weight = 1;
+            params.height = 80;
 
             TableRow row = new TableRow(this);
+
+
             TextView column1 = new TextView(this);
             column1.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
             column1.setBackground(getResources().getDrawable(R.drawable.border));
             column1.setLayoutParams(params);
             column1.setText(plan.getTitle());
 
-            TextView column2 = new TextView(this);
-            column2.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-            column2.setBackground(getResources().getDrawable(R.drawable.border));
-            column2.setLayoutParams(params);
-            column2.setText(plan.getOwner().getName());
+//            TextView column2 = new TextView(this);
+//            column2.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+//            column2.setBackground(getResources().getDrawable(R.drawable.border));
+//            column2.setLayoutParams(params);
+//            column2.setText(plan.getOwner().getName());
 
             TextView column3 = new TextView(this);
             column3.setText(plan.getStartDate());
@@ -313,18 +326,29 @@ public class MyTasksActivity extends AppCompatActivity
             column4.setText(plan.getPriority());
 
             row.addView(column1);
-            row.addView(column2);
+//            row.addView(column2);
             row.addView(column3);
             row.addView(column4);
-
+            int finalIndex = index;
             row.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     System.out.println("Clicked: "+ column1.getText());
-                }
+                    Intent toUpdateTask = new Intent(getApplicationContext(), CreateTaskActivity.class);
+                    toUpdateTask.putExtra("update", true);
+                    toUpdateTask.putExtra("taskID", planesID.get(finalIndex));
+                    toUpdateTask.putExtra("user", plan.getOwner());
+                    toUpdateTask.putExtra("title", plan.getTitle());
+                    toUpdateTask.putExtra("description", plan.getDescription());
+                    toUpdateTask.putExtra("status", plan.getStatus());
+                    toUpdateTask.putExtra("startDate", plan.getStartDate());
+                    toUpdateTask.putExtra("priority", plan.getPriority());
+                    toUpdateTask.putExtra("sharedWith", plan.getSharedWith());
+                    startActivity(toUpdateTask);                }
             });
 
             table.addView(row);
+            index++;
         }
 
     }
