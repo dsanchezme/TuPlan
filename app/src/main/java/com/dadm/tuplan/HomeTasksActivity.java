@@ -46,7 +46,8 @@ public class HomeTasksActivity extends AppCompatActivity
     private Map<String, List<Plan>> tasksByGroup = new HashMap<>();
     private Map<String, List<String>> tasksID = new HashMap<>();
     private List<Plan> planesCompletados = new ArrayList<>();
-    private List<String> myGroups = new ArrayList<>();
+    private List<String> myGroupsID = new ArrayList<>();
+    private List<Group> myGroups = new ArrayList<>();
     private int planesCompletadosPrioridadBaja = 0;
     private int planesCompletadosPrioridadMedia = 0;
     private int planesCompletadosPrioridadAlta = 0;
@@ -147,6 +148,7 @@ public class HomeTasksActivity extends AppCompatActivity
         newGroupButton.setOnClickListener(view -> {
             Intent toCreateGroup = new Intent(HomeTasksActivity.this, CreateGroupActivity.class);
             toCreateGroup.putExtra("user",(User) getIntent().getExtras().get("user"));
+            toCreateGroup.putExtra("update", false);
             startActivity(toCreateGroup);
         });
 
@@ -160,7 +162,8 @@ public class HomeTasksActivity extends AppCompatActivity
                         continue;
                     Group group = new Group((Map<String, Object>) groupsDataSnapshot.getValue());
                     if (group.getMembers().contains(currentUser.getEmail())){
-                        myGroups.add(group.getName());
+                        myGroups.add(group);
+                        myGroupsID.add(groupsDataSnapshot.getKey());
                     }
                 }
             }
@@ -188,7 +191,7 @@ public class HomeTasksActivity extends AppCompatActivity
                     if (planesDataSnapshot.getValue() != null){
                         Plan plan = new Plan((Map<String, Object>) planesDataSnapshot.getValue());
                         System.out.println("MY GROUPS: "+ myGroups);
-                        if (!myGroups.contains(plan.getSharedWith()))
+                        if (!listContainsGroup(myGroups, plan.getSharedWith()))
                             continue;
                         System.out.println("MY Plan: "+ plan);
                         if (!tasksByGroup.keySet().contains(plan.getSharedWith())){
@@ -239,7 +242,7 @@ public class HomeTasksActivity extends AppCompatActivity
             }
         });
 
-        SharedTasksListAdapter tasksAdapter = new SharedTasksListAdapter(this,R.layout.layout_group_tasks,myGroups, tasksByGroup, tasksID);
+        SharedTasksListAdapter tasksAdapter = new SharedTasksListAdapter(this,R.layout.layout_group_tasks,myGroups, tasksByGroup, tasksID, myGroupsID);
         tasksView.setAdapter(tasksAdapter);
     }
 
@@ -296,6 +299,15 @@ public class HomeTasksActivity extends AppCompatActivity
     private boolean listContainsPlan(List<Plan> list, Plan plan){
         for (Plan item : list){
             if (item.getTitle().equals(plan.getTitle())){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean listContainsGroup(List<Group> list, String group){
+        for (Group item : list){
+            if (item.getName().equals(group)){
                 return true;
             }
         }

@@ -13,14 +13,17 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.dadm.tuplan.CreateGroupActivity;
 import com.dadm.tuplan.CreateTaskActivity;
 import com.dadm.tuplan.MyTasksActivity;
 import com.dadm.tuplan.R;
+import com.dadm.tuplan.models.Group;
 import com.dadm.tuplan.models.Plan;
 import com.dadm.tuplan.models.User;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -28,16 +31,18 @@ public class SharedTasksListAdapter extends BaseAdapter {
 
     private int layout;
     private Context context;
-    private List<String> groups;
+    private List<Group> groups;
+    private List<String> groupsID;
     private Map<String, List<Plan>> tasks;
     private Map<String, List<String>> tasksID;
 
-    public SharedTasksListAdapter(Activity context, int layout, List<String> groups, Map<String, List<Plan>> tasks, Map<String, List<String>> tasksID){
+    public SharedTasksListAdapter(Activity context, int layout, List<Group> groups, Map<String, List<Plan>> tasks, Map<String, List<String>> tasksID, List<String> groupsID){
         this.context = context;
         this.layout = layout;
         this.groups = groups;
         this.tasks = tasks;
         this.tasksID = tasksID;
+        this.groupsID = groupsID;
     }
 
     @Override
@@ -63,7 +68,9 @@ public class SharedTasksListAdapter extends BaseAdapter {
             v=view;
         }
 
-        String selectedGroup = groups.get(position);
+
+        String selectedGroup = groups.get(position).getName();
+        System.out.println("Selected group: "+ selectedGroup);
         List<Plan> selectedTasks = tasks.get(selectedGroup);
         List<String> selectedTasksID = tasksID.get(selectedGroup);
 
@@ -131,6 +138,20 @@ public class SharedTasksListAdapter extends BaseAdapter {
             tasksTable.addView(row);
             index++;
         }
+
+        v.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                System.out.println("Clicked: "+ selectedGroup);
+                Intent toUpdateGroup = new Intent(context.getApplicationContext(), CreateGroupActivity.class);
+                toUpdateGroup.putExtra("update", true);
+                toUpdateGroup.putExtra("groupID", groupsID.get(position));
+                toUpdateGroup.putExtra("groupName", groups.get(position).getName());
+                toUpdateGroup.putExtra("groupMembers", String.join(" ", groups.get(position).getMembers()));
+                context.startActivity(toUpdateGroup);
+                System.out.println(groupsID.get(position));
+            }
+        });
 
         return v;
     }
