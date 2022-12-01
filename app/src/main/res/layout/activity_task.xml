@@ -36,7 +36,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="14sp"
-                    android:id="@+id/nombre"
+                    android:id="@+id/nombreTarea"
                     android:hint="Ingrese nombre de lengua"
                     android:gravity="center_vertical|center" />
             </LinearLayout>
@@ -57,7 +57,7 @@
                     android:textStyle="bold" />
 
                 <Spinner
-                    android:id="@+id/status"
+                    android:id="@+id/statusTareasFilter"
                     android:layout_width="match_parent"
                     android:layout_height="39dp"
                     android:layout_weight="0"
@@ -88,7 +88,7 @@
                     android:gravity="center" />
 
                 <Spinner
-                    android:id="@+id/prioridad"
+                    android:id="@+id/prioridadTareaFilter"
                     android:layout_width="match_parent"
                     android:layout_height="39dp"
                     android:layout_weight="0"
@@ -113,7 +113,7 @@
                     android:textStyle="bold" />
 
                 <EditText
-                    android:id="@+id/fechaFin"
+                    android:id="@+id/fechaTarea"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="0"
@@ -155,6 +155,7 @@
         </LinearLayout>
 
         <TableLayout
+            android:id="@+id/tasksTable"
             android:layout_width="match_parent"
             android:layout_height="431dp"
             android:layout_weight="0">
